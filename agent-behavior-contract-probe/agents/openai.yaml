@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Behavior Contract Probe"
+  short_description: "Probe real agent runtime behavior safely"
+  default_prompt: "Use $agent-behavior-contract-probe to validate a focused production agent behavior contract."

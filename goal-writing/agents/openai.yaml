@@ -1,0 +1,4 @@
+interface:
+  display_name: "Goal Writing"
+  short_description: "Write scalable north-star goal contracts"
+  default_prompt: "Use $goal-writing to turn this context into a scalable north-star goal and route it through the appropriate coordination and planning layers."

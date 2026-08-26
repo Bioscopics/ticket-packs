@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "testedOn": "2026-08-24",
+  "python": ">=3.12",
+  "distribution": "distylai-mrkr",
+  "version": "0.1.7",
+  "wheelSha256": "455258438041627c84077cb90aca05b3da2485a709357c9075031d636f0361fb",
+  "requiredPublicSymbols": [
+    "MRKR_PATTERN",
+    "async_build_citable_packet_from_documents",
+    "build_citable_packet",
+    "scrub_all_markers",
+    "scrub_unverified_markers"
+  ],
+  "runtimeDependencies": [
+    "defusedxml>=0.7.1"
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cursor Agent SDK"
+  short_description: "Launch and manage Cursor agents from Codex"
+  default_prompt: "Use $cursor-agent-sdk to launch a Cursor agent with an available model and monitor its run."

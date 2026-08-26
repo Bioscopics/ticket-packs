@@ -1,0 +1,4 @@
+interface:
+  display_name: "MRKR Integration Review"
+  short_description: "Audit MRKR citation integrations"
+  default_prompt: "Use $mrkr-integration-review to audit this MRKR integration for correctness, minimality, and on-prem safety."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Compose Cohesive PR Stacks"
+  short_description: "Partition PR units and approve stack topology"
+  default_prompt: "Use $compose-cohesive-pr-stacks to partition validated PR units, order real dependencies, and hand the approved topology to $gh-stack."

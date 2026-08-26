@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deep Researcher"
+  short_description: "Answer simple questions directly or decompose hard ones into parallel research lanes"
+  default_prompt: "Use $deep-researcher to answer the user's question directly when it is simple, or create and execute a maximally parallel research lane graph for a hard question, then return a final answer to the original question."

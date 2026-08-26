@@ -1,0 +1,8 @@
+interface:
+  display_name: "fe/ui-design"
+  short_description: "Distyl-compliant frontend UI design"
+  brand_color: "#5D4EE7"
+  default_prompt: "Use $fe-ui-design to design or refactor frontend UI so it follows the Distyl design system."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,4 @@
+interface:
+  display_name: "MRKR Integration"
+  short_description: "Add verified, clickable MRKR citations"
+  default_prompt: "Use $mrkr-integration to add MRKR citations to this existing workflow without redesigning it."

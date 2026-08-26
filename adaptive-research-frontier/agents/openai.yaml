@@ -1,0 +1,7 @@
+interface:
+  display_name: "Adaptive Research Frontier"
+  short_description: "Discover uncertain research paths adaptively"
+  default_prompt: "Use $adaptive-research-frontier to explore this uncertain research space and hand a validated evidence packet to deep-researcher."
+
+policy:
+  allow_implicit_invocation: false

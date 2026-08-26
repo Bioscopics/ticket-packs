@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Synthetic Data"
+  short_description: "Create calibrated, validated synthetic datasets"
+  default_prompt: "Use $create-synthetic-data to preserve supplied controls, calibrate from matching real examples, choose authored-case, deterministic-population, or hybrid generation, route workers by difficulty and speed, validate realism and labels, and package a privacy-safe dataset."

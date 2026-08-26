@@ -1,0 +1,99 @@
+.mrkr-citable-text {
+  color: inherit;
+  white-space: pre-wrap;
+}
+
+.mrkr-citation-trigger {
+  align-items: center;
+  background: var(--mrkr-citation-background, #e8eef8);
+  border: 1px solid var(--mrkr-citation-border, #9cadd0);
+  border-radius: 999px;
+  color: var(--mrkr-citation-foreground, #243b6b);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.75em;
+  font-weight: 700;
+  height: 1.45em;
+  justify-content: center;
+  line-height: 1;
+  margin: 0 0.15em;
+  min-width: 1.45em;
+  padding: 0 0.35em;
+  vertical-align: super;
+}
+
+.mrkr-citation-trigger:hover,
+.mrkr-citation-trigger:focus-visible {
+  background: var(--mrkr-citation-hover, #d6e0f1);
+  outline: 2px solid var(--mrkr-citation-focus, #4267a9);
+  outline-offset: 2px;
+}
+
+.mrkr-citation-dialog {
+  background: var(--mrkr-dialog-background, #ffffff);
+  border: 1px solid var(--mrkr-dialog-border, #c8ced8);
+  border-radius: 8px;
+  box-shadow: 0 18px 48px rgb(15 23 42 / 24%);
+  color: var(--mrkr-dialog-foreground, #172033);
+  max-height: min(80vh, 720px);
+  max-width: min(92vw, 640px);
+  padding: 0;
+  width: 100%;
+}
+
+.mrkr-citation-dialog::backdrop {
+  background: rgb(15 23 42 / 42%);
+}
+
+.mrkr-citation-dialog-body {
+  padding: 20px;
+}
+
+.mrkr-citation-dialog-header {
+  align-items: start;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.mrkr-citation-dialog-header h2,
+.mrkr-citation-eyebrow {
+  margin: 0;
+}
+
+.mrkr-citation-eyebrow {
+  color: var(--mrkr-muted-foreground, #5e6a7d);
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.mrkr-citation-close {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1.5rem;
+  height: 36px;
+  width: 36px;
+}
+
+.mrkr-citation-excerpts {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.mrkr-citation-excerpts blockquote {
+  background: var(--mrkr-excerpt-background, #f4f6f9);
+  border-left: 3px solid var(--mrkr-excerpt-border, #8b9bb7);
+  margin: 0;
+  padding: 12px 14px;
+}
+
+.mrkr-citation-open {
+  color: var(--mrkr-link, #28579c);
+  font-weight: 600;
+}

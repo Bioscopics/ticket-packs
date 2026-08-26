@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Collaboration"
+  short_description: "Coordinate related Codex agents as a team"
+  default_prompt: "Use $agent-collaboration to form a working group from related Codex tasks and coordinate their work."
