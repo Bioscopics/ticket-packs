@@ -1,0 +1,4 @@
+interface:
+  display_name: "Task Auto Planner Ticket Pack"
+  short_description: "Plan and dispatch non-coding research/drafting ticket packs"
+  default_prompt: "Use $task-auto-planner-ticket-pack to create a rigorous non-coding ticket pack or ticket-pack set for research, aggregation, drafting, review, and finishing work, then dispatch it through role-locked orchestrators without doing the substantive lane work directly."

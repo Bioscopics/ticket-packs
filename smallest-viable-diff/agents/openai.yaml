@@ -1,0 +1,4 @@
+interface:
+  display_name: "Smallest Viable Diff"
+  short_description: "Keep changes minimal and report merge units"
+  default_prompt: "Use $smallest-viable-diff to minimize this change and report candidate merge units without deciding stack topology."

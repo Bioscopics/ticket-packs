@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test From UI"
+  short_description: "Validate apps through realistic browser UI journeys."
+  default_prompt: "Use test-from-ui to validate this app from the visible UI with realistic inputs, native files, screenshots, and pass/fail evidence."

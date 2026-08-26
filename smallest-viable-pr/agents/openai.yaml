@@ -1,0 +1,4 @@
+interface:
+  display_name: "Smallest Viable PR"
+  short_description: "Validate PR boundaries and split relationships"
+  default_prompt: "Use $smallest-viable-pr to validate these PR boundaries and classify relationships among any recommended splits."
