@@ -4,6 +4,11 @@ The distribution is `distylai-mrkr`; the Python import is `mrkr`. Use the
 version approved by the target environment and verify the public symbols at
 implementation time. The examples below match the 0.1.7 public API.
 
+## Availability
+
+`distylai-mrkr==0.1.7` is not published on public PyPI. Current users need an
+approved private wheel or registry, or an authorized source checkout.
+
 ## Packet from existing text
 
 ```python

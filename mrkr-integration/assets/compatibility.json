@@ -9,6 +9,7 @@
     "MRKR_PATTERN",
     "async_build_citable_packet_from_documents",
     "build_citable_packet",
+    "document_bytes_to_faithful_markdown",
     "scrub_all_markers",
     "scrub_unverified_markers"
   ],
