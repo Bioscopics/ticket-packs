@@ -5,7 +5,7 @@ evidence-to-click lifecycle.
 
 ## Backend unit tests
 
-- packet construction uses `distylai-mrkr` and produces canonical 8-hex MRKRs;
+- packet construction uses `mrkr-provenance` and produces canonical 8-hex MRKRs;
 - only current packet IDs survive finalization;
 - invented, malformed, altered, stale, and duplicate/ambiguous IDs fail or are
   scrubbed according to the contract;

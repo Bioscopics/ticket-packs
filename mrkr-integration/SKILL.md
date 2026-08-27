@@ -14,7 +14,7 @@ through the product's native result, API, renderer, and source-opening behavior.
 The required lifecycle is:
 
 ```text
-existing retrieval/selection -> distylai-mrkr preprocessing
+existing retrieval/selection -> mrkr-provenance preprocessing
                              -> existing model/agent
                              -> raw text with inline MRKRs
                              -> deterministic finalization and native association
@@ -24,7 +24,7 @@ existing retrieval/selection -> distylai-mrkr preprocessing
 
 ## Non-negotiable contract
 
-- Use the `distylai-mrkr` distribution (`import mrkr`) for marker creation,
+- Use the `mrkr-provenance` distribution (`import mrkr`) for marker creation,
   parsing, and scrubbing. Do not clone its algorithms or mint marker IDs.
 - Retrieve or select the useful evidence first, then markerize every
   evidence-bearing source item actually supplied to the model. Do not
@@ -76,7 +76,7 @@ existing retrieval/selection -> distylai-mrkr preprocessing
    narrow insertion point before the existing model call and one verification
    point after it.
 4. Use the public package APIs in
-   [references/distylai-mrkr.md](references/distylai-mrkr.md). Feature-detect
+   [references/mrkr-provenance.md](references/mrkr-provenance.md). Feature-detect
    the API actually installed in the target environment; do not assume an
    application-local wrapper.
    When implementation code is needed, adapt the tested assets described in

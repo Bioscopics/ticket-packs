@@ -1,4 +1,0 @@
-interface:
-  display_name: "Auto Planner"
-  short_description: "Plan coding lanes and PR packaging handoffs"
-  default_prompt: "Use $auto-planner-ticket-pack to create and dispatch the coding pack, identify proposed PR units, and invoke stack composition before packaging more than one PR."

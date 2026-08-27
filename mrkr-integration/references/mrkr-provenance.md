@@ -1,8 +1,18 @@
-# `distylai-mrkr` Public API
+# `mrkr-provenance` Public API
 
-The distribution is `distylai-mrkr`; the Python import is `mrkr`. Use the
-version approved by the target environment and verify the public symbols at
-implementation time. The examples below match the 0.1.7 public API.
+The distribution is `mrkr-provenance`; the Python import remains `mrkr`. Use
+the version approved by the target environment and verify the public symbols
+at implementation time. The examples below match the current `0.0.0` build.
+
+## Availability
+
+The package is not available from public PyPI and does not have a tagged
+release yet. Install the exact immutable source revision and package
+subdirectory with:
+
+```bash
+pip install "mrkr-provenance @ git+https://github.com/Bioscopics/mrkr-provenance.git@268e8d67c0358252c279f0bff958980aaed24c93#subdirectory=mrkr-provenance"
+```
 
 ## Packet from existing text
 
@@ -151,7 +161,7 @@ exactly match the provider-owned hint for its opaque ID.
 
 ## Dependency and distribution
 
-- Declare `distylai-mrkr` in every package that imports `mrkr` directly.
+- Declare `mrkr-provenance` in every package that imports `mrkr` directly.
 - Follow the target repository's pin and lockfile policy.
 - For private/on-prem delivery, mirror the approved wheel and transitive wheels
   to the customer's package registry or deliver an integrity-checked offline

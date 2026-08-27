@@ -12,7 +12,7 @@
 
 ## 2. Package ownership
 
-- Direct importers declare the `distylai-mrkr` distribution.
+- Direct importers declare the `mrkr-provenance` distribution.
 - Product code imports public `mrkr` APIs rather than cloning marker creation,
   extraction, or scrubbing.
 - Canonical syntax is exact: `【mrkr: ||label|| deadbeef】`.

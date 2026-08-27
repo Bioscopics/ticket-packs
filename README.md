@@ -64,7 +64,7 @@ First, clone the repository:
 git clone https://github.com/Bioscopics/ticket-packs.git
 ```
 
-Then make the repository available through your agent’s normal skill-loading mechanism. Depending on the agent, that may mean adding the repository root to a recursive skill search path or copying or symlinking the skill folders you want to use. Keep the directory structure intact so entry skills can find their supporting skills and references.
+Then make the repository available through your agent’s normal skill-loading mechanism. The skill folders exposed from the repository root are the canonical packages; in particular, use the top-level `auto-planner-ticket-pack/` and `task-auto-planner-ticket-pack/` entry points rather than nested mirrors. You can copy or symlink individual folders containing a `SKILL.md`, or copy or symlink the full repository root into a recursive skill search path. Installing the full root is safe because the catalog contains only one package for each skill name. Keep each selected skill folder intact so its entry point can find its supporting resources.
 
 Once installed, ask your agent naturally and name the appropriate entry skill.
 

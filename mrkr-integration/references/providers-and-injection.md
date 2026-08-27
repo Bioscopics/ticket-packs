@@ -40,7 +40,7 @@ available. Retain all complete source metadata in `source_registry`.
 ## Document and file sources
 
 Resolve user-selected file IDs through the current authorization layer, then
-pass authorized bytes or staged paths to `distylai-mrkr`. Retain extraction
+pass authorized bytes or staged paths to `mrkr-provenance`. Retain extraction
 quality warnings and source checksums. Preserve the target application's file
 limits, malware scanning, MIME detection, tenant isolation, and deletion rules.
 
@@ -52,7 +52,7 @@ limits before extraction.
 
 The search provider remains replaceable. It must return actual source content
 and stable source locators, not model-invented citations. Normalize selected
-results into citable documents, build the packet with `distylai-mrkr`, and map
+results into citable documents, build the packet with `mrkr-provenance`, and map
 each marker label to a retained authorized source record.
 
 For public web search:
