@@ -59,5 +59,5 @@ Check the installed runtime and optionally an approved wheel:
 
 ```bash
 python scripts/check_compatibility.py
-python scripts/check_compatibility.py --wheel /approved/distylai_mrkr.whl
+python scripts/check_compatibility.py --wheel /approved/mrkr_provenance.whl
 ```

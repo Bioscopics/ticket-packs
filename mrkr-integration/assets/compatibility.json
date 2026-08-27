@@ -1,10 +1,13 @@
 {
   "schemaVersion": 1,
-  "testedOn": "2026-08-24",
+  "testedOn": "2026-08-27",
   "python": ">=3.12",
-  "distribution": "distylai-mrkr",
-  "version": "0.1.7",
-  "wheelSha256": "455258438041627c84077cb90aca05b3da2485a709357c9075031d636f0361fb",
+  "distribution": "mrkr-provenance",
+  "version": "0.0.0",
+  "wheelSha256": "2631346c5a997690352c346ff82ece3ca02a83ed67f65500908551b226f5b807",
+  "sourceRepository": "https://github.com/Bioscopics/mrkr-provenance",
+  "sourceRevision": "268e8d67c0358252c279f0bff958980aaed24c93",
+  "sourceSubdirectory": "mrkr-provenance",
   "requiredPublicSymbols": [
     "MRKR_PATTERN",
     "async_build_citable_packet_from_documents",
@@ -14,6 +17,10 @@
     "scrub_unverified_markers"
   ],
   "runtimeDependencies": [
-    "defusedxml>=0.7.1"
+    "beautifulsoup4>=4.12",
+    "defusedxml>=0.7.1",
+    "pdfplumber>=0.11",
+    "pypdf>=6.10.2",
+    "xlrd>=2.0.2"
   ]
 }

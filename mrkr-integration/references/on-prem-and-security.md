@@ -1,14 +1,19 @@
 # On-Prem and Security Contract
 
 The integration must work without hosted vendor runtime services. The
-`distylai-mrkr` package is required; any particular application, agent, or
+`mrkr-provenance` package is required; any particular application, agent, or
 storage framework and public search are optional.
 
 ## Package delivery
 
-- Mirror the approved `distylai-mrkr` wheel and transitive dependencies into
-  the customer's private package registry, or provide an integrity-checked
+- Mirror an approved, integrity-checked `mrkr-provenance` wheel and transitive
+  dependencies into the customer's internal package registry, or provide an
   offline wheel bundle through the approved software-delivery process.
+- Build from the public repository
+  `https://github.com/Bioscopics/mrkr-provenance` at revision
+  `268e8d67c0358252c279f0bff958980aaed24c93`, using package subdirectory
+  `mrkr-provenance`. The distribution is not on public PyPI and has no release
+  tag.
 - Pin and lock according to the customer's dependency policy.
 - Verify distribution name, imported public API, wheel hash/signature, Python
   compatibility, and license/security approval during deployment.
@@ -57,7 +62,8 @@ external vision extraction explicitly.
 
 Before calling the packet on-prem ready, prove:
 
-- install from the private/offline source on a clean environment;
+- install from the approved internal mirror or offline source on a clean
+  environment;
 - startup with public network access disabled;
 - deterministic document citation flow without external credentials;
 - the configured behavior when OCR/vision or public web search is unavailable;

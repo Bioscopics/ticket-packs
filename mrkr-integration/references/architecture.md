@@ -10,7 +10,7 @@ Source intake/retrieval and evidence selection
 Provider adapter
   |  normalizes selected source text + compact provider-owned label
   v
-distylai-mrkr packet construction
+mrkr-provenance packet construction
   |-- model-visible: citable text with exact MRKRs + mandatory instructions
   `-- model-external: marker IDs, match hints, source index/registry, checksums
   v

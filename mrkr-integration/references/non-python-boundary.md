@@ -1,8 +1,8 @@
 # Non-Python Host Boundary
 
-`distylai-mrkr` 0.1.7 is a Python package requiring Python 3.12 or newer. Do not
-port its markerization or extraction logic into TypeScript, Java, Go, or another
-language merely to avoid a Python boundary.
+`mrkr-provenance` (`import mrkr`) is a Python package requiring Python 3.12 or
+newer. Do not port its markerization or extraction logic into TypeScript, Java,
+Go, or another language merely to avoid a Python boundary.
 
 Use this decision order:
 

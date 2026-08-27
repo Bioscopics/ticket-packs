@@ -25,7 +25,7 @@ Review the actual evidence-to-model-to-user path, not just files named
 
 Return `NO-GO` for any of these:
 
-- markers are minted outside `distylai-mrkr` or accepted from model output;
+- markers are minted outside `mrkr-provenance` or accepted from model output;
 - valid IDs/metadata are not scoped to the current invocation;
 - designated outputs bypass verification before persistence/API return;
 - markers are required in tool arguments, response-schema objects, or business
