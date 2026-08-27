@@ -15,6 +15,28 @@ diagnostics         extraction/search quality, warnings, and failures
 Keep this envelope behind the application's existing service boundary. Do not
 make the model author it.
 
+## Selection before markerization
+
+Trace the exact evidence entering each model or agent invocation. Reuse the
+product's router, search, page selection, retrieval, or tool loop to narrow the
+source set first, then markerize every evidence-bearing item the model can rely
+on in that invocation. Do not markerize a whole repository, agreement set, or
+document corpus when the product already selects a bounded subset.
+
+System instructions, user requests, deterministic metadata, and routing-only
+context need no MRKRs unless that stage itself produces evidence-backed output.
+For multi-stage agents, build an invocation-local packet at each evidence-to-
+model boundary that can contribute cited claims.
+
+## Compact provider-owned labels
+
+Assign a short source reference before calling the package. Prefer an existing
+compact domain identifier such as `lf_001`; otherwise normalize a short
+filename stem or title and collision-check it within the packet. Add page
+location compactly, for example `lf_001:p12`. Never use a full `.pdf` filename,
+storage path, URL, UUID, or repeated document title merely because it is
+available. Retain all complete source metadata in `source_registry`.
+
 ## Document and file sources
 
 Resolve user-selected file IDs through the current authorization layer, then
@@ -76,6 +98,8 @@ needed at the owner boundary:
 
 - copy exact current markers immediately after supported claims;
 - never invent IDs or resolver metadata;
+- place markers only in ordinary assistant text/Markdown, never tool arguments
+  or structured business JSON;
 - omit or qualify unsupported claims according to product policy;
 - preserve the required output schema and domain behavior.
 
@@ -83,8 +107,12 @@ needed at the owner boundary:
 
 If an existing agent retrieves evidence through tools, return markerized text
 from the tool or inject the resulting packet before the reasoning/model call.
-Do not add a parallel citation agent. Limit tool permissions and secrets using
-the host agent framework's existing controls.
+Keep tool calls and structured domain outputs marker-free, then capture the
+agent's ordinary final text as the MRKR-bearing channel. When the product stores
+fields, rows, or records rather than prose, define a deterministic association
+from the verified marker-bearing claim to the existing stable native ID. Do not
+add a parallel citation agent or a second model call. Limit tool permissions and
+secrets using the host agent framework's existing controls.
 
 For follow-ups, strip old markers from the prompt-only history projection with
 the package API and provide a fresh current packet. Do not mutate persisted

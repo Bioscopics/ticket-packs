@@ -1,8 +1,8 @@
 # On-Prem and Security Contract
 
-The integration must work without DistylAI-hosted runtime services. The
-`distylai-mrkr` package is required; Toolkit, Weave, Context Mesh, and public
-search are optional.
+The integration must work without hosted vendor runtime services. The
+`distylai-mrkr` package is required; any particular application, agent, or
+storage framework and public search are optional.
 
 ## Package delivery
 

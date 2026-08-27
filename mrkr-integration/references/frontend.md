@@ -16,7 +16,9 @@ rules while replacing its visual primitives with the host design system.
   by the target codebase; otherwise mirror the package's canonical pattern in a
   small tested client parser.
 - Replace each resolved marker with an inline accessible citation control.
-- Use only the citation bundle for labels, snippets, and resolver targets.
+- Display the provider-assigned compact label, such as `lf_001:p12`, on the
+  inline control. Use the citation bundle—not the marker text—for the full
+  filename/title, snippet, page, anchors, bounding boxes, and resolver target.
 - Never create a clickable target from model text.
 - Remove or render a neutral unavailable state for unresolved tokens; raw MRKR
   syntax must not leak into normal UI.
@@ -31,6 +33,8 @@ drawers, document viewers, routing, and theme tokens. A citation control should:
 - visually read as a source reference, not a warning or primary command;
 - open the source detail in the application's established modal/drawer pattern;
 - show source title, directly supporting excerpt/anchor, and source location;
+- reuse an existing document/PDF viewer and bounding-box highlight path when
+  present instead of building a parallel source viewer;
 - offer "open source" only when an authorized resolver exists;
 - preserve focus and work on narrow/mobile layouts.
 
@@ -44,9 +48,11 @@ During streaming, avoid treating an incomplete marker token as final content.
 Buffer or defer parsing until a complete token is available. Final rendering
 must use the sanitized server result, not an optimistic client interpretation.
 
-For structured results, render citations only in fields declared MRKR-bearing.
-Do not recursively rewrite arbitrary object keys, identifiers, code, or binary
-artifact references.
+For structured results, do not place or recursively search for MRKRs inside
+business JSON. Render the marker-free native field/row/card and use the
+backend-built deterministic association to place its verified citation controls
+beside it. The ordinary marker-bearing claim text remains the provenance
+channel; structured data remains the product's domain channel.
 
 ## Documents and exports
 
@@ -71,3 +77,7 @@ Test through the real UI:
 5. verify malformed/unknown markers are not clickable or exposed raw;
 6. verify loading, no-source, provider-error, and revoked-source states;
 7. verify follow-up output resolves only current-turn citations.
+8. verify a compact control label resolves to the complete source filename,
+   page, excerpt/anchors, and existing highlight behavior.
+9. verify new MRKR-enabled results do not depend on a model-authored verbatim
+   quote, page number, or citation JSON object.

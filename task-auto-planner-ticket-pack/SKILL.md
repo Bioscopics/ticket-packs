@@ -81,6 +81,39 @@ A rough, incomplete, or visibly failing artifact is a valid early checkpoint
 when it lets the intended consumer attempt the real job and exposes the actual
 blocker. It is not final evidence or completion.
 
+### Environment boundary
+
+An audience-loop probe authorizes using an existing, documented, or already
+provisioned production, rendering, data, or delivery environment. It does not
+authorize turning environment repair into a second project. A request to test,
+render, publish, compare, or prove a deliverable does not by itself authorize
+repairing shared services, changing host toolchains, rebuilding dependencies,
+rewiring caches, or inventing a substitute delivery system.
+
+Before repairing a failed attempt, classify the blocker:
+
+- `DELIVERABLE_BLOCKER`: the failure is caused by the ticket-owned artifact or
+  production surface; repair it within the current phase and scope.
+- `ENVIRONMENT_BLOCKER`: the failure is caused by the host, storage, toolchain,
+  dependency cache, renderer, shared service, account, network, data access, or
+  unrelated delivery infrastructure.
+- `UNKNOWN_BLOCKER`: one bounded diagnostic may distinguish the two; it is not
+  authority for open-ended remediation.
+
+For an `ENVIRONMENT_BLOCKER`, capture the first failure, perform at most one
+small confirmation or documented retry, then stop and return
+`ENVIRONMENT_BLOCKED` with the usable artifact, evidence gathered, and the
+audience proof that remains unproven. Two consecutive non-deliverable setup
+failures are a mandatory stop even when another plausible fix exists. Do not
+start or repair services, rebuild shared packages, generate missing
+infrastructure, change host state, or create an alternate delivery path unless
+the user explicitly placed that environment work in scope.
+
+If environment remediation was explicitly authorized, plan it as a bounded
+owned surface with its own terminal condition and blast-radius controls. A
+required final gate may remain blocked; report it honestly rather than skipping
+the gate or silently broadening the task.
+
 Use these delivery phases:
 
 - `audience_loop_probe`: produce the smallest representative end-to-end
@@ -138,6 +171,9 @@ Shortest complete audience flow: <consumer, action, and observable result>
 First-feedback evidence: <artifact/use result or expected failure receipt>
 Deferred hardening gates: <checks intentionally postponed or none>
 Review blocking classes: <applicable BLOCK_NOW classes>
+Validation environment: <known environment and documented use path>
+Environment repair authority: none | <explicitly authorized owned surface>
+Environment stop condition: <first confirmed external blocker plus at most one documented retry>
 ```
 
 ## Research Engine Skill Web
@@ -163,6 +199,52 @@ Deep-researcher handoff and final fallback: required
 ```
 
 For `adaptive_then_planned`, include `adaptive-research-frontier` in addition to `deep-researcher` and this skill. The adaptive skill may return evidence but may not emit the final answer, persist memory or drills, alter the planner-selected runtime contract, or replace `deep-researcher`.
+
+## Portable Fit
+
+This is a portable plain markdown skill. It does not override local role
+locks in planner, dispatcher, or worker prompts. It strengthens them.
+
+If the current prompt already fixes the agent into one role:
+
+- `planner` -> use the planning, blueprinting, pack-authoring, and pack-quality
+  rules
+- `dispatcher` -> use the role/provider, receipt, gating, and repair-loop rules
+- `worker` -> do not use this skill as permission to widen scope or invent
+  missing contracts
+
+Local role lock wins. This skill supplies the operating contract around that
+role.
+
+## Full-Skill Read Requirement
+
+Before any agent operating under this skill acknowledges its role, plans,
+dispatches, researches, drafts, reviews, or executes work, it must read the
+**entire injected skill** from top to bottom and treat that full text as the
+active contract.
+
+This rule is mandatory for:
+
+- the top-level `auto_planner`
+- any orchestrator initialized under this skill
+- any research lane initialized under this skill
+- any drafting, aggregation, review, or finishing lane initialized under this
+  skill
+
+The agent may **not** rely on:
+
+- memory of an earlier version of this skill
+- summaries of this skill
+- assumptions about how this precise task `auto_planner` contract works
+- prior habits from a different orchestration system
+- partial excerpts when the full injected skill is expected
+
+Role acknowledgment is invalid unless it is based on the fully read injected
+skill. The agent must not claim to understand or accept its role under this
+skill until the full contract has been read.
+
+If the skill has not been fully injected, fully read, or is only partially
+available, stop and correct that first. Do not proceed on memory or inference.
 
 ## Hard Stop: Direct Deliverable Requests
 

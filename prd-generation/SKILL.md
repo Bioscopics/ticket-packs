@@ -1,17 +1,17 @@
 ---
-name: button-prd
-description: Draft copy-pastable Button Build a System PRDs from rough use-case notes, transcripts, examples, local file packets, or product ideas. Use when the user asks for a "button-prd", BAS request, filled PRD template, Build a System prompt, or wants a raw Markdown PRD with Use Case Definition, Constraints, Evaluations, and optional References.
+name: prd-generation
+description: Draft copy-pastable product requirements documents from rough notes, transcripts, examples, local file packets, or product ideas. Use when the user asks for a PRD, use-case definition, product specification, or structured requirements with constraints and evaluations.
 ---
 
-# Button PRD
+# PRD Generation
 
 ## Purpose
 
-Turn loose Button Build a System ideas into a copy-pastable Markdown PRD that gives the BAS planner enough product, input/output, behavior, constraint, and evaluation detail to preserve the intended system shape.
+Turn loose product ideas into a copy-pastable Markdown PRD that preserves the intended product, input/output, behavior, constraint, and evaluation shape.
 
 ## Output Rule
 
-Default to one copy-pastable Markdown artifact. If the user is likely pasting into Button, wrap the whole PRD in a four-backtick Markdown fence:
+Default to one copy-pastable Markdown artifact. If the user is likely pasting the PRD into another tool, wrap the whole PRD in a four-backtick Markdown fence:
 
 ````text
 ````markdown
@@ -23,7 +23,7 @@ Use inner fenced blocks normally for JSON and Mermaid. Do not add explanatory pr
 
 ## Required PRD Shape
 
-Use this exact top-level structure:
+Use this top-level structure unless the user or target system supplies a required template:
 
 ```markdown
 # Use Case Definition
@@ -32,19 +32,19 @@ Use this exact top-level structure:
 
 ### Goal
 
-<1-2 sentences describing the goal of the system.>
+<1-2 sentences describing the goal of the product or system.>
 
 ### Use Case Summary
 
-<No more than two paragraphs describing what the system does and who it is for.>
+<No more than two paragraphs describing what the product does and who it is for.>
 
 ## Inputs and Outputs
 
-<A table with input/output name, type/direction, and description. Include a sample JSON payload.>
+<A table with input/output name, type/direction, and description. Include a sample JSON payload when useful.>
 
-## System Behaviour
+## Product Behaviour
 
-<Describe how the system behaves. Include Mermaid flowcharts and tables only when they clarify the workflow, edge cases, or state model.>
+<Describe the end-to-end behavior. Include Mermaid flowcharts and tables only when they clarify the workflow, edge cases, or state model.>
 
 # Constraints
 
@@ -64,24 +64,24 @@ Use this exact top-level structure:
 1. Extract the intended product shape before details:
    - target user
    - primary job-to-be-done
-   - primary UI or runtime shape
+   - primary interface or runtime shape
    - core loop or workflow
    - what must not be reduced away
 
 2. Normalize inputs and outputs:
-   - separate user-provided files/data from intermediate artifacts and final outputs
+   - separate user-provided files or data from intermediate artifacts and final outputs
    - include representative file categories, formats, and failure modes
    - inspect local example files when paths are provided, but do not mutate them
    - use sample files as input-shape evidence, not as the full product definition
 
 3. Make behavior operational:
    - describe the end-to-end flow
-   - include the important state transitions
+   - include important state transitions
    - call out deterministic checks, agentic reasoning, tool use, retrieval, vision, citations, memory, or interactive controls when they matter
-   - list common edge cases in a table when the system has meaningful failure modes
+   - list common edge cases in a table when the product has meaningful failure modes
 
 4. Make constraints concrete:
-   - include UX shape, modality, data handling, evidence/citation expectations, runtime, cost, latency, model/tool requirements, and non-goals
+   - include UX shape, modality, data handling, evidence or citation expectations, runtime, cost, latency, model or tool requirements, and non-goals
    - state when accuracy, traceability, or human review matters more than speed
 
 5. Make evaluations testable:
@@ -89,15 +89,15 @@ Use this exact top-level structure:
    - include minimum targets or pass/fail standards
    - cover product-fit quality, not just pipeline success
 
-## Button-Specific Guidance
+## Product-Shape Guidance
 
-- Preserve the intended app, game, tool, or workflow. Do not reduce an interactive app into a generic dashboard or one-shot form unless the user explicitly asks for that.
+- Preserve the intended app, game, tool, or workflow. Do not reduce an interactive product into a generic dashboard or one-shot form unless the user explicitly asks for that.
 - For folder-upload systems, describe the directory structure and file categories clearly.
 - For multimodal or scanned documents, say whether vision-based parsing, page-level indexing, OCR fallback, or citation coordinates are expected.
 - For agentic systems, describe what the agent observes, remembers, decides, and how it uses feedback.
-- For games and simulations, describe the core loop, world state, controls, progression, win/quality conditions, and AI-agent observation/action interface if relevant.
+- For games and simulations, describe the core loop, world state, controls, progression, win or quality conditions, and AI-agent observation/action interface if relevant.
 - For evidence-heavy workflows, require source references in the final output and define what a valid citation contains.
-- For generated-app validation, include evaluations that catch reduced or generic implementations.
+- For generated-product validation, include evaluations that catch reduced or generic implementations.
 
 ## Style
 

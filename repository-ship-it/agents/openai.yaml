@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repository Ship It"
+  short_description: "Ship scoped changes as review-ready PRs"
+  default_prompt: "Use $repository-ship-it to inspect this repository's conventions, package the scoped change, write a BLUF PR with useful self-review notes, handle checks and feedback, and prepare a concise review ask."

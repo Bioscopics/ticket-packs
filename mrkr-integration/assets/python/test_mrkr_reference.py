@@ -124,6 +124,7 @@ class MrkrDocumentReferenceTests(unittest.IsolatedAsyncioTestCase):
             [
                 DocumentSource(
                     source_id="upload-1",
+                    label="svc_note",
                     filename="service-note.txt",
                     title="Uploaded service note",
                     content=SOURCE_TEXT.encode(),
@@ -133,6 +134,8 @@ class MrkrDocumentReferenceTests(unittest.IsolatedAsyncioTestCase):
             ]
         )
         marker = next(MRKR_PATTERN.finditer(envelope.model_context)).group(0)
+        self.assertIn("||svc_note:p1||", marker)
+        self.assertNotIn("service-note.txt", marker)
         result = finalize_text(f"Inspect the inlet. {marker}", envelope, require_citation=True)
         self.assertEqual(result.citation_bundle["sources"][0]["sourceId"], "upload-1")
 
@@ -143,6 +146,7 @@ class MrkrDocumentReferenceTests(unittest.IsolatedAsyncioTestCase):
                 [
                     DocumentSource(
                         source_id="upload-1",
+                        label="unsafe_note",
                         filename="unsafe-note.txt",
                         title="Unsafe note",
                         content=content,

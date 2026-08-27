@@ -12,7 +12,7 @@ description: Use when validated PR units must be partitioned and ordered into co
 - Use `pr-review-deep-dive` when the task is a read-only audit of the PRs in a proposed train.
 - Use `pr-create-bluf-review` for each PR's reviewer-facing body and inline self-review notes.
 - After the user approves the topology, invoke the externally maintained `gh-stack` skill to create or update the native GitHub stack.
-- Use `toolkit-ship-it` for individual Toolkit PR content and review readiness when needed; it does not replace `gh-stack` execution.
+- Use `repository-ship-it` for individual repository PR content and review readiness when needed; it does not replace `gh-stack` execution.
 
 This skill partitions units and decides topology and merge order. It does not replace boundary validation, PR writing, or GitHub stack execution. Reference `gh-stack`; do not copy, modify, or reimplement its instructions here.
 

@@ -6,6 +6,7 @@ own retrieval, persistence, authorization, model invocation, or UI behavior.
 
 from __future__ import annotations
 
+import asyncio
 import re
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
@@ -13,8 +14,8 @@ from typing import Any, Literal
 
 from mrkr import (
     MRKR_PATTERN,
-    async_build_citable_packet_from_documents,
     build_citable_packet,
+    document_bytes_to_faithful_markdown,
     scrub_all_markers,
     scrub_unverified_markers,
 )
@@ -70,6 +71,7 @@ class DocumentSource:
     """Authorized uploaded/stored document bytes and model-external metadata."""
 
     source_id: str
+    label: str
     filename: str
     title: str
     content: bytes
@@ -109,17 +111,22 @@ def _source_records(records: Sequence[SourceRecord]) -> dict[str, SourceRecord]:
     if not records:
         raise CitationContractError("at least one authorized source is required")
     by_label: dict[str, SourceRecord] = {}
-    source_ids: set[str] = set()
+    by_source_id: dict[str, SourceRecord] = {}
     for record in records:
         label = _required(record.label, "source label")
         source_id = _required(record.source_id, "source id")
         _required(record.title, "source title")
         if label in by_label:
             raise CitationContractError(f"duplicate source label: {label}")
-        if source_id in source_ids:
-            raise CitationContractError(f"duplicate source id: {source_id}")
+        existing = by_source_id.get(source_id)
+        if existing is not None and (
+            existing.title != record.title
+            or existing.resolver != record.resolver
+            or existing.checksum != record.checksum
+        ):
+            raise CitationContractError(f"conflicting metadata for source id: {source_id}")
         by_label[label] = record
-        source_ids.add(source_id)
+        by_source_id[source_id] = record
     return by_label
 
 
@@ -193,55 +200,85 @@ async def build_document_envelope(
     *,
     additional_citation_requirements: Sequence[str] | None = None,
 ) -> ProviderEnvelope:
-    """Build a packet from authorized document bytes using package extraction."""
+    """Extract authorized bytes, then markerize pages with caller-owned labels."""
     document_by_filename: dict[str, DocumentSource] = {}
+    labels: set[str] = set()
     source_ids: set[str] = set()
-    packet_documents: list[dict[str, Any]] = []
     for document in documents:
         filename = _required(document.filename, "document filename")
+        label = _required(document.label, "document label")
         if not document.content:
             raise CitationContractError(f"document content is empty: {filename}")
         if filename in document_by_filename:
             raise CitationContractError(f"duplicate document filename: {filename}")
+        if label in labels:
+            raise CitationContractError(f"duplicate document label: {label}")
         source_id = _required(document.source_id, "source id")
         if source_id in source_ids:
             raise CitationContractError(f"duplicate source id: {source_id}")
         document_by_filename[filename] = document
+        labels.add(label)
         source_ids.add(source_id)
-        packet_documents.append(
-            {
-                "content": document.content,
-                "filename": filename,
-                "mime_type": document.mime_type,
-            }
+    extracted_documents = await asyncio.gather(
+        *(
+            document_bytes_to_faithful_markdown(
+                document.content,
+                filename=document.filename,
+                mime_type=document.mime_type,
+            )
+            for document in documents
         )
+    )
 
-    packet = await async_build_citable_packet_from_documents(
+    records: list[SourceRecord] = []
+    packet_documents: list[dict[str, str]] = []
+    for extracted in extracted_documents:
+        document = document_by_filename.get(extracted.filename)
+        if document is None:
+            raise CitationContractError("document extraction returned an unknown filename")
+        pages = extracted.pages or []
+        if pages:
+            for page in pages:
+                page_label = f"{document.label}:p{page.page_number}"
+                packet_documents.append(
+                    {
+                        "text": page.markdown,
+                        "label": page_label,
+                        "title": document.title,
+                        "path": document.filename,
+                    }
+                )
+                records.append(
+                    SourceRecord(
+                        source_id=document.source_id,
+                        label=page_label,
+                        title=document.title,
+                        resolver=document.resolver,
+                        checksum=document.checksum or extracted.source_checksum,
+                    )
+                )
+        else:
+            packet_documents.append(
+                {
+                    "text": extracted.markdown,
+                    "label": document.label,
+                    "title": document.title,
+                    "path": document.filename,
+                }
+            )
+            records.append(
+                SourceRecord(
+                    source_id=document.source_id,
+                    label=document.label,
+                    title=document.title,
+                    resolver=document.resolver,
+                    checksum=document.checksum or extracted.source_checksum,
+                )
+            )
+    packet = build_citable_packet(
         packet_documents,
         additional_citation_requirements=additional_citation_requirements,
     )
-    records: list[SourceRecord] = []
-    indexed_filenames: set[str] = set()
-    for entry in packet.source_index:
-        filename = entry.get("filename")
-        label = entry.get("label")
-        if not isinstance(filename, str) or not isinstance(label, str):
-            raise CitationContractError("document packet source index is incomplete")
-        document = document_by_filename.get(filename)
-        if document is None or filename in indexed_filenames:
-            raise CitationContractError("document packet source index is ambiguous")
-        records.append(
-            SourceRecord(
-                source_id=document.source_id,
-                label=label,
-                title=document.title,
-                resolver=document.resolver,
-                checksum=document.checksum or entry.get("source_checksum"),
-            )
-        )
-        indexed_filenames.add(filename)
-    if indexed_filenames != set(document_by_filename):
-        raise CitationContractError("document packet omitted an authorized source")
     return _make_envelope(packet, records)
 
 
@@ -319,9 +356,11 @@ def finalize_text(
     if require_citation and not bundle_citations:
         raise CitationContractError("at least one verified citation is required")
 
-    bundle_sources = [
-        source.to_bundle_dict() for source in envelope.sources_by_label.values() if source.source_id in used_source_ids
-    ]
+    bundle_sources_by_id: dict[str, dict[str, Any]] = {}
+    for source in envelope.sources_by_label.values():
+        if source.source_id in used_source_ids:
+            bundle_sources_by_id.setdefault(source.source_id, source.to_bundle_dict())
+    bundle_sources = list(bundle_sources_by_id.values())
     return FinalizedCitationText(
         text=candidate,
         citation_bundle={

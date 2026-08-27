@@ -62,7 +62,7 @@ Load references only as needed:
 - [realistic-case-packet-calibration.md](references/realistic-case-packet-calibration.md): calibrate document-family realism from unrelated examples; avoid padded PDFs and template-looking packets.
 - [conversation-dataset-regressions.md](references/conversation-dataset-regressions.md): for multi-session chats, semantic-language labels, or controlled time expressions, use hidden label-first planning and validate natural evidence, fresh-session openers, full-utterance label meaning, contextual temporal-expression variation, and blind adjudication.
 - [modality-helper-skills.md](references/modality-helper-skills.md): route images, PDFs, DOCX, spreadsheets, audio, video, and UI tests to modality-specific helper skills/tools instead of faking them.
-- [toolkit-weave-media-contracts.md](references/toolkit-weave-media-contracts.md): use Toolkit/Weave generated-app media fixture contracts, local rendering-images/rendering-audio/rendering-video/playground-media/playground-voice/multimodal skills, and case-local sibling-file rules.
+- [generated-app-media-contracts.md](references/generated-app-media-contracts.md): discover repository-native generated-app media contracts, route to available specialist helpers, and keep fixture files separate from held-out labels.
 - [agent-prompts.md](references/agent-prompts.md): prompts for research, planning, generation, QA, repair, and packaging agents.
 - [execution-modes.md](references/execution-modes.md): choose fast vs full lanes, native subagents, and model routing without weakening QA.
 - [evidence-reference-contract.md](references/evidence-reference-contract.md): preserve host schemas while validating PDF/workbook evidence through held-out reference manifests.
