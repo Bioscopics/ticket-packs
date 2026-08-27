@@ -16,7 +16,7 @@ Use this decision order:
    approval, security review, deployment ownership, and latency/reliability
    evaluation.
 
-Do not silently add a subprocess, sidecar, remote DistylAI service, or public
+Do not silently add a subprocess, sidecar, remote vendor service, or public
 network dependency. The reference Python module is library code, not a service
 contract. If a separately approved service is created, keep its API minimal:
 

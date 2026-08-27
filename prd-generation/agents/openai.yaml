@@ -1,0 +1,4 @@
+interface:
+  display_name: "PRD Generation"
+  short_description: "Draft copy-pastable product requirements"
+  default_prompt: "Use $prd-generation to turn these notes into a copy-pastable product requirements document."

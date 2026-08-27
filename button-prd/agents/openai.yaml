@@ -1,4 +1,0 @@
-interface:
-  display_name: "Button PRD"
-  short_description: "Draft copy-pastable Button PRDs"
-  default_prompt: "Use $button-prd to turn this Button Build a System idea into a copy-pastable PRD."

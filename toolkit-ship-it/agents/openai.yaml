@@ -1,3 +1,0 @@
-display_name: Toolkit Ship It
-short_description: Ship scoped Toolkit changes on ben/* branches with BLUF PRs, inline self-comments, review fixes, green checks, and a paste-ready review ask.
-default_prompt: Ship this Toolkit change safely: inspect the actual diff, preserve unrelated work, use a ben/* branch, write a BLUF PR, add useful inline self-comments, wait for Claude/CodeRabbit and checks, fix sensible comments, and give me a short message to paste to reviewers.

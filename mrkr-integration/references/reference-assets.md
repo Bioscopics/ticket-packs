@@ -8,7 +8,8 @@ adapt the smallest relevant part; do not install a parallel framework.
 `assets/python/mrkr_reference.py` supplies:
 
 - `build_text_envelope` for approved web, RAG, and internal-search text;
-- `build_document_envelope` for authorized document bytes;
+- `build_document_envelope` for authorized document bytes, explicit compact
+  caller-owned labels, and page-specific marker labels;
 - source-marker injection stripping and unregistered-marker fail-closed checks;
 - current-invocation ID and provider-label validation;
 - `finalize_text` for one declared MRKR-bearing field;

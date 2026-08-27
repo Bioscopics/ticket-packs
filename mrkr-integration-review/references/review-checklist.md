@@ -29,9 +29,17 @@
 ## 3. Provider and prompt boundary
 
 - Evidence is authorized before extraction/retrieval.
+- Existing retrieval, search, page selection, or tool routing narrows the
+  evidence first; every evidence-bearing item actually sent to the model is
+  markerized without indiscriminately markerizing the whole available corpus.
+- The provider assigns a short, stable, collision-checked label before
+  markerization. Full filenames, extensions, paths, URLs, UUID noise, and
+  repeated titles remain in model-external source metadata.
 - Provider output includes markerized text plus model-external valid IDs, match
   hints, source registry/index, and diagnostics.
 - The model sees package-generated citable text and mandatory instructions once.
+- MRKRs appear only in ordinary assistant text/Markdown, not tool arguments,
+  response-schema objects, or structured business JSON.
 - The model does not see secrets, ACL metadata, signed URLs, or resolver internals.
 - Only current-turn marker IDs are valid; prompt-only history projection removes
   stale markers without mutating persisted history.
@@ -48,6 +56,12 @@
 - Unknown, malformed, stale, duplicate, and ambiguous markers are handled
   deterministically.
 - Citation bundle metadata is built by backend/provider code.
+- Marker-bearing claims are associated deterministically with existing native
+  field, row, record, or result IDs; no fuzzy reconstruction or second model
+  performs the join.
+- For new MRKR-enabled results, redundant model-authored quotation, page,
+  source, and citation-object fields are removed or deterministically derived
+  from verified provider metadata when compatibility still requires them.
 - Required-citation policy fails closed when no valid support remains.
 - High-stakes implementations test semantic support, not ID membership alone.
 
@@ -65,6 +79,9 @@
 
 - UI renders only sanitized content plus verified bundle.
 - Exact markers become keyboard-accessible inline controls.
+- Compact inline labels resolve through the verified bundle to full source
+  titles, page/anchor/bounding-box metadata, and the existing source viewer or
+  highlight path.
 - Source detail uses host-native components and current auth routes.
 - Unresolved markers are not raw/clickable.
 - Streaming handles partial tokens; reload preserves old verified responses.
@@ -97,6 +114,11 @@ Require tests for:
 - real package import, not only mocks;
 - browser click-through and accessibility when a frontend exists;
 - unchanged non-citation workflow behavior;
+- marker-free structured business output with deterministic native-ID citation
+  association and no second-model or fuzzy-text join;
+- compact labels that resolve to complete source metadata;
+- removal or derivation of redundant model-authored provenance fields for new
+  MRKR-enabled results;
 - offline/no-egress operation when on-prem is claimed.
 - executable adapter/finalizer tests or equivalent product-native tests, not
   only prompt prose and a review checklist.

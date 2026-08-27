@@ -44,7 +44,7 @@ You are a capability-routing agent for a synthetic-data project. Do not generate
 Required modalities/native formats: <list>.
 Target product/runtime: <product and repo paths>.
 
-Inspect both the available skill catalog and filesystem-backed skill roots, including `$CODEX_HOME/skills`, `$CODEX_HOME/plugins/cache`, the current workspace, Toolkit, and Weave. A local helper remains usable even when it is not registered in the current session; read its `SKILL.md` directly and resolve runtime dependencies from its owning repo. For PDF output, prefer the active primary-runtime `handle_pdfs/SKILL.md` and record the resolved helper in the receipt.
+Inspect both the available skill catalog and filesystem-backed skill roots, including `$CODEX_HOME/skills`, `$CODEX_HOME/plugins/cache`, the current workspace, and any user-provided repositories. A local helper remains usable even when it is not registered in the current session; read its `SKILL.md` directly and resolve runtime dependencies from its owning repo. For PDF output, prefer the active primary-runtime `handle_pdfs/SKILL.md` and record the resolved helper in the receipt.
 
 Return a complete `planning/modality_execution_matrix.json` with, for every modality:
 - `schema_version: 1` at the matrix root

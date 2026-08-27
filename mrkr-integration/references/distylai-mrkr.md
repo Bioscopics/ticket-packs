@@ -13,7 +13,7 @@ packet = build_citable_packet(
     [
         {
             "text": source_text,
-            "label": display_label,
+            "label": short_source_label,
             "source": authorized_source_locator,
         }
     ]
@@ -30,22 +30,37 @@ requirements. Do not append a second conflicting copy.
 
 ## Packet from uploaded bytes
 
-Use bytes APIs when the application already owns uploaded content in memory or
-object storage:
+When the application already owns uploaded content in memory or object storage,
+extract it first and then pass the codebase-owned compact label into packet
+construction. This preserves the package's faithful extraction while avoiding
+filename-derived marker noise:
 
 ```python
-from mrkr import async_build_citable_packet_from_documents
+from mrkr import build_citable_packet, document_bytes_to_faithful_markdown
 
-packet = await async_build_citable_packet_from_documents(
+document = await document_bytes_to_faithful_markdown(
+    upload_bytes,
+    filename=safe_full_filename,
+    mime_type=detected_mime_type,
+)
+packet = build_citable_packet(
     [
         {
-            "content": upload_bytes,
-            "filename": safe_display_name,
-            "mime_type": detected_mime_type,
+            "text": page.markdown,
+            "label": f"{short_source_reference}:p{page.page_number}",
+            "title": full_display_title,
+            "path": authorized_source_locator,
         }
+        for page in document.pages
     ]
 )
 ```
+
+Convenience document-byte packet builders in some package versions derive the
+visible label from the filename and do not accept a caller label. Do not use
+that convenience path when it would expose a long filename. Feature-detect the
+installed API; either pass an explicit label when supported or use the
+extract-then-build sequence above.
 
 ## Packet from existing paths or folders
 
@@ -60,7 +75,7 @@ packet = build_citable_packet(
     [
         {
             "text": document.markdown,
-            "label": document.filename,
+            "label": assign_short_source_label(document),
             "path": document.filename,
         }
         for document in documents
@@ -114,6 +129,25 @@ IDs are opaque. Neither application code nor the model may derive an ID from a
 URL, filename, page, hash, or counter. Tests may inject the package's private
 ID factory hook only for deterministic package-level fixtures; product code
 must not.
+
+## Source-label contract
+
+The provider adapter, never the model, assigns the display label passed to
+packet construction. Use the shortest human-readable label that remains unique
+within the invocation:
+
+1. Prefer an existing short document, record, exhibit, or source reference.
+2. Otherwise normalize the filename stem or title, removing `.pdf` and other
+   extensions, long paths, UUIDs, and redundant words.
+3. Collision-check the result within the packet and add only the shortest
+   stable disambiguator needed.
+4. For page-based sources, use a compact page form such as `lf_001:p12` when the
+   package/provider boundary supports page-specific labels.
+
+The private source index retains the full filename/title, stable document ID,
+page, version/checksum, anchors, resolver, and authorization data. Do not repeat
+that metadata in the label. Finalization must require the returned label to
+exactly match the provider-owned hint for its opaque ID.
 
 ## Dependency and distribution
 

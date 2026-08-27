@@ -11,7 +11,7 @@ Adapt commands to the repository; use its native search tools and conventions.
 rg -n "(chat|completion|responses|generate|invoke|agent|llm|model)" .
 rg -n "(prompt|messages|system_prompt|context|retriev|upload|document|search)" .
 rg -n "(result|response|artifact|history|conversation|memo|decision)" .
-rg -n "(markdown|rich.?text|modal|drawer|tooltip|citation|source)" .
+rg -n "(markdown|rich.?text|modal|drawer|tooltip|citation|source_page|quote|bounding.?box)" .
 rg -n "(tenant|workspace|organization|acl|permission|authorize)" .
 rg -n "(pyproject.toml|requirements|package.json|lock)" .
 ```
@@ -29,14 +29,22 @@ Document one real path before planning:
 | Evidence intake | path/symbol | raw file/search/result | retain/adapt |
 | Context assembly | path/symbol | evidence -> model messages | insertion point |
 | Model invocation | path/symbol | messages -> raw output | unchanged |
-| Response parsing | path/symbol | raw -> domain output | finalizer point |
+| Structured/domain output | path/symbol | tool/business JSON | keep marker-free |
+| Raw response parsing | path/symbol | raw text -> verified claims | finalizer point |
+| Native association | path/symbol | claim markers -> field/result IDs | deterministic join |
 | Persistence | path/symbol | record/artifact | additive metadata |
 | API | path/symbol | backend -> client | additive bundle |
 | UI renderer | path/symbol | content -> view | citation extension |
+| Source interaction | path/symbol | click -> source excerpt/page/highlight | reuse/adapt |
 
 Also record:
 
 - selected evidence-bearing output fields;
+- the exact evidence subset actually placed in each model/agent invocation;
+- provider-owned source labels and the full metadata kept outside the model;
+- any model-authored verbatim quote, page, source ID, or citation object;
+- every storage, API, evaluation, export, and UI consumer of those legacy fields;
+- the stable native field/result/claim IDs available for deterministic association;
 - follow-up/history behavior;
 - source authorization and tenant boundary;
 - file-size/type limits and extraction behavior;
@@ -48,17 +56,22 @@ Also record:
 Write the smallest behavior delta:
 
 ```text
-Add verified MRKR citations to <specific evidence-backed output> by adapting
-<existing context boundary>, finalizing at <existing response boundary>, and
-rendering through <existing UI surface>. Preserve <workflow/model/rules/state>.
+Make <specific evidence-backed output> marker-native by markerizing the selected
+evidence at <existing context boundary>, finalizing raw marker-bearing text at
+<existing response boundary>, associating it with <native result IDs>, and
+rendering it through <existing clickable source surface>. Replace
+<legacy model-authored citation responsibility> while preserving
+<workflow/model/rules/state and historical compatibility>.
 ```
 
 Expected change surface should normally be:
 
 - one backend provider/context adapter;
-- one response finalizer or narrow extension of an existing parser;
+- one response finalizer and deterministic native association or narrow
+  extensions of existing parsers;
 - additive persistence/API schema fields if needed;
 - one existing frontend renderer plus focused tests;
+- removal or bypass of redundant model-authored citation inputs for new runs;
 - dependency declarations only in packages that directly import `mrkr`.
 
 ## Reuse proof

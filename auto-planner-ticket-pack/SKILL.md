@@ -81,6 +81,40 @@ incomplete, or visibly failing version is a valid early checkpoint when it
 reaches the real surface and exposes the actual blocker. It is not completion
 and must be labeled honestly.
 
+### Environment boundary
+
+Validation authorizes using an existing, documented, or already provisioned
+environment. It does not authorize turning environment repair into a second
+project. A request to test the app, get it working, make a PR green, or prove a
+user flow does not by itself authorize rebuilding shared packages, repairing
+services, changing host toolchains, rewiring caches, or inventing a substitute
+runtime.
+
+Before repairing a failed validation attempt, classify the blocker:
+
+- `PRODUCT_BLOCKER`: the failure is caused by the ticket-owned product surface;
+  repair it within the current phase and scope.
+- `ENVIRONMENT_BLOCKER`: the failure is caused by the host, disk, toolchain,
+  dependency cache, generated infrastructure artifact, supervisor, database,
+  queue, shared service, account, network, or unrelated runtime assembly.
+- `UNKNOWN_BLOCKER`: one bounded diagnostic may distinguish the two; it is not
+  authority for open-ended remediation.
+
+For an `ENVIRONMENT_BLOCKER`, capture the first failure, perform at most one
+small confirmation or documented retry, then stop and return
+`ENVIRONMENT_BLOCKED` with the usable artifact or PR, evidence gathered, and
+the validation that remains unproven. Two consecutive non-product setup
+failures are a mandatory stop even if each suggests one more plausible fix.
+Do not start new services, rebuild shared packages, generate or rewrite missing
+infrastructure artifacts, create alternate app identities or port topologies,
+repair databases or queues, or modify shared host state unless the user
+explicitly placed that environment work in scope.
+
+If environment remediation was explicitly authorized, plan it as a bounded
+owned surface with its own terminal condition and blast-radius controls. A
+required final gate may remain blocked; report it honestly rather than skipping
+the gate or silently broadening the task.
+
 Use these delivery phases:
 
 - `user_flow_probe`: make the smallest real journey attemptable through the UI
@@ -145,6 +179,9 @@ Shortest complete user flow: <real entrypoint, action, and observable result>
 First-feedback evidence: <URL/input/screenshot/result or expected failure receipt>
 Test-writing policy: prohibited_until_pr_hardening | pr_hardening_required
 Review blocking classes: <applicable BLOCK_NOW classes>
+Validation environment: <known environment and documented start path>
+Environment repair authority: none | <explicitly authorized owned surface>
+Environment stop condition: <first confirmed external blocker plus at most one documented retry>
 ```
 
 ## Research Engine Skill Web
@@ -181,7 +218,7 @@ Use this validation ladder at its applicable scopes:
 2. a faithful real-agent behavioral contract probe proves one controlled runtime choice when that uncertainty remains;
 3. E2E remains the final proof of the complete cross-system user outcome.
 
-When the planner selects this technique, add `agent-behavior-contract-probe` to that lane's required skills and choose the target repository's faithful production agent runtime and adapter. OpenCode may be preferred when it faithfully runs a Weave agent, but it is never a prerequisite or dependency. For other repositories, use their production runtime or another faithful real-agent runtime carrying the production prompt, tools, permissions, configuration, and topology. If none is available, classify the probe `unavailable`, record the missing fidelity, and continue all other proof; never block solely because OpenCode is absent.
+When the planner selects this technique, add `agent-behavior-contract-probe` to that lane's required skills and choose the target repository's faithful production agent runtime and adapter. OpenCode may be preferred when it faithfully runs the target agent, but it is never a prerequisite or dependency. Otherwise, use the repository's production runtime or another faithful real-agent runtime carrying the production prompt, tools, permissions, configuration, and topology. If none is available, classify the probe `unavailable`, record the missing fidelity, and continue all other proof; never block solely because OpenCode is absent.
 
 Author these fields before dispatching a selected probe:
 
@@ -1181,15 +1218,16 @@ That means:
 
 If a ticket pack could still be answered with "I wasn't sure what you wanted me to change," the pack is not rigorous enough.
 
-### Toolkit Button Testing Convention
+### Repository-Native Testing Convention
 
-When a pack touches Button or the Button engine, route tests into the CI lanes established by `DistylAI/toolkit#1680`:
+Derive test placement and acceptance commands from the target repository rather than imposing a framework or directory layout. Before authoring a testing lane, inspect the nearest `AGENTS.md`, contribution guide, package scripts, test directories, and CI configuration, then reuse the repository's established unit, integration, workflow, and E2E boundaries.
 
-- Backend unit tests live under `apps/button/backend/tests/unit` and should cover deterministic helpers, guards, parsing, path safety, upload caps, state loading, and other pure behavior.
-- Backend integration tests live under `apps/button/backend/tests/integration` and should use the real FastAPI `TestClient` / assembled router to prove endpoint wiring, status codes, file guards, and response contracts.
-- Engine Python unit tests live under `apps/button/engine/tests/unit` and must be deterministic and CI-safe.
-- Engine workflow TypeScript tests live beside workflow source as `apps/button/engine/opencode-workflow/src/*.test.ts` and run with Bun.
-- Live LLM, network, Exa, model-provider, or other non-deterministic checks belong under `apps/button/engine/tests/integration` and must not be used as required CI proof unless explicitly requested.
+During `user_flow_probe` and `implementation`, do not create unit tests. Use the shortest complete user-flow attempt, existing targeted checks, and runtime evidence to expose the first meaningful blocker. Author or update unit tests only in `pr_hardening`, after the implementation boundary is stable, and only for behavior that will remain in the proposed PR.
+
+- Keep deterministic helpers and pure behavior in the repository's existing unit-test surface.
+- Use the repository's real assembled route, service, workflow, or component boundary for integration proof.
+- Keep workflow/runtime tests beside or under the location already established by that codebase.
+- Treat live model, network, provider, or other nondeterministic checks as optional integration evidence unless the user or repository contract explicitly makes them required.
 
 Prefer real temporary files, real zip archives, real git repos, and real router wiring over mocks. Mock only process boundaries that would make the test non-deterministic, such as clocks, env vars, external services, or live model calls.
 
@@ -1200,16 +1238,15 @@ Tests should assert the actual behavioral contract, not weak proxies. Examples:
 - assert nested excluded files are absent, not only that top-level excluded folders are absent,
 - avoid low-value pins to hard-coded literals unless the literal is the behavior under test.
 
-For Button lanes, choose targeted acceptance commands from:
+Record exact targeted acceptance commands from the repository before dispatch, for example:
 
 ```bash
-uv run pytest apps/button/backend/tests/unit -v --tb=short
-uv run pytest apps/button/backend/tests/integration -v --tb=short
-uv run pytest apps/button/engine/tests/unit -v --tb=short
-cd apps/button/engine/opencode-workflow && bun test ./src/*.test.ts
+<repo-unit-test-command> <narrow-test-path>
+<repo-integration-test-command> <narrow-test-path>
+<repo-workflow-test-command> <narrow-test-path>
 ```
 
-Use the narrowest subset that proves the lane. When multiple heads or behavior surfaces are integrated, treat that assembly as invalidating lane-local proof for the combined behavior and require the integration or finisher lane to rerun the relevant full command(s). For an unchanged single head, reuse a current accepted receipt instead of rerunning by ritual. Include top-level test module docstrings when adding substantial test modules, and keep imports at module scope.
+Replace every placeholder with a real command; placeholders make the pack invalid. Use the narrowest subset that proves the lane. When multiple heads or behavior surfaces are integrated, treat that assembly as invalidating lane-local proof for the combined behavior and require the integration or finisher lane to rerun the relevant full command(s). For an unchanged single head, reuse a current accepted receipt instead of rerunning by ritual.
 
 ### No-Interpretation Rule
 
@@ -1411,11 +1448,13 @@ State model:
 
 Only use this for truly independent ticket-pack sets where separate orchestration materially reduces coordination risk. Do not use it for the normal single-pack case. Send this exact message before handing off the child pack:
 
+Before constructing the message, search the lane worktree for its repository-owned orchestration instructions, such as `ORCHESTRATOR_MASTER_AGENT.md`, the nearest `AGENTS.md`, or an equivalent documented contract. Record the exact selected path. If no separate document exists, say so and use the embedded contract below; do not assume a global product-specific path.
+
 ```text
 You are now operating as ORCHESTRATOR ONLY.
 
 Read and follow this file first:
-ORCHESTRATOR_MASTER_AGENT.md inside of button_modules/
+<exact repo-local orchestration document, or "none; use the embedded contract below">
 
 Role lock:
 - You are the orchestration layer.
@@ -1503,7 +1542,7 @@ Before launching any new orchestrator or worker session, build the first-contact
 5. the exact scoped ticket block or scoped task,
 6. acceptance commands and receipt requirements.
 
-For Toolkit frontend/UI lanes, include `references/toolkit-fe-ui.md` as a coding-conventions source, especially for styling, portal, popout, or sidebar work.
+For frontend/UI lanes, include `references/frontend-ui.md` as a coding-conventions source, especially for styling, portal, popout, or sidebar work.
 
 Do not open a fresh child session with only the ticket body and no role bootstrap.
 
@@ -1512,9 +1551,11 @@ Do not open a fresh child session with only the ticket body and no role bootstra
 Before any lane:
 
 ```bash
-git -C /Volumes/git/button-modules status --short --branch
-git -C /Volumes/git/button-modules rev-parse --abbrev-ref HEAD
+git -C <lane-cwd> status --short --branch
+git -C <lane-cwd> rev-parse --abbrev-ref HEAD
 ```
+
+Replace `<lane-cwd>` with the ticket's exact repository/worktree path before dispatch.
 
 ### Transport-Specific Dispatch
 

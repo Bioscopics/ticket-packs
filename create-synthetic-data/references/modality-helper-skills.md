@@ -15,9 +15,9 @@ The parent synthetic-data skill is the orchestrator, not the default renderer. W
 Before planning native/media artifacts:
 
 1. Inspect the available skill catalog.
-2. Search local product/runtime skill roots, including the current workspace, `$CODEX_HOME/skills`, Toolkit, and Weave. Prefer canonical paths such as:
-   - `/Volumes/git/toolkit/apps/button/engine/opencode-workflow/.opencode/skills/`
-   - `/Volumes/git/toolkit/apps/weave/backend/src/weave/template/.opencode/skills/`
+2. Search local product/runtime skill roots, including the current workspace, `$CODEX_HOME/skills`, and any user-provided repositories. Prefer portable paths such as:
+   - `<workspace>/.agents/skills/`
+   - `<workspace>/.opencode/skills/`
    - `<workspace>/template/.opencode/skills/`
    - `<workspace>/apps/*/.opencode/skills/`
    - `$CODEX_HOME/plugins/cache/*/skills/`
@@ -97,18 +97,18 @@ Load and use helper skills when available:
 - `documents`: create and visually verify DOCX/Word-style artifacts with realistic formatting.
 - `Spreadsheets`: create and visually verify native XLSX/XLS workbooks, plus CSV exports when the domain uses exports.
 - `test-from-ui`: validate that generated files actually work through a visible app upload/UI journey.
-- Toolkit/Weave local media skills, when present: use `rendering-images`, `rendering-audio`, `rendering-video`, `rendering-pdfs`, `reading-documents`, `playground-media`, `playground-voice`, and `multimodal` before inventing ad hoc media-generation rules for generated-app benchmarks.
+- Repository-local media skills, when present: use applicable `rendering-*`, document-reading, playground, voice, or multimodal skills before inventing ad hoc media-generation rules for generated-app evaluations.
 - `Presentations`: create and render-check PPTX/slide artifacts when the real-example profile includes presentations.
 
 For realistic benchmark media, use paired ownership:
 
-- **Images:** `imagegen` owns bitmap generation/editing; `rendering-images` supplies benchmark dimensions, variance, prompt, and artifact quality gates.
+- **Images:** `imagegen` owns bitmap generation/editing; a repository-native image contract may add evaluation dimensions, variance, prompt, and artifact quality gates.
 - **Audio files:** `rendering-audio` owns speech/audio generation, duration, sidecars, and waveform/container checks.
 - **Video files:** `rendering-video` owns realistic motion generation, duration/size, prompts, transcripts/keyframes, and playback checks.
 - **PDF/DOCX/XLSX/PPTX:** the matching native artifact skill owns container creation and render/visual QA; product `rendering-*` skills add benchmark-specific requirements.
-- **Generated-app runtime/UI:** `multimodal`, `playground-media`, and `playground-voice` own fixture, payload, upload, preview, realtime, and E2E contracts.
+- **Generated-app runtime/UI:** repository-native multimodal, playground, and voice skills own fixture, payload, upload, preview, realtime, and E2E contracts when present.
 
-Prefer canonical Toolkit helpers under `/Volumes/git/toolkit/apps/button/engine/opencode-workflow/.opencode/skills/` over copies embedded in generated app folders. Prefer canonical Weave contracts under `/Volumes/git/toolkit/apps/weave/backend/src/weave/template/.opencode/skills/` or the active repo's `template/.opencode/skills/`.
+Prefer the target repository's canonical shared helpers over copies embedded in generated app folders. Record the selected repository-relative path and source commit when available.
 
 If a needed helper skill or media generator is unavailable, say so in the QA report and either generate the best real container available or mark that modality as blocked. Do not silently ship a text stand-in while claiming modality coverage.
 
@@ -134,16 +134,20 @@ PYTHON_BIN="$(command -v python3 || command -v python)"
 
 Record the exact command or prompt, model path, output path, and `file` validation result in a helper receipt. If the command fails, keep the failure in QA and mark realistic image generation blocked; do not replace it with a cartoon final.
 
-## Toolkit / Weave Generated-App Contract
+## Generated-App Contract
 
-When the synthetic data is for Toolkit Button, Weave, Build-a-System, or a generated app, also read `toolkit-weave-media-contracts.md`. If local Toolkit/Weave contract skills exist, load them as source-of-truth:
+When the synthetic data is for a generated app, also read `generated-app-media-contracts.md`. If repository-native contract skills exist, load them as source-of-truth:
 
 - `playground-media` for upload previews, runtime input payloads, output rendering, and UI smoke expectations;
 - `playground-voice` for realtime voice app contracts and mic-free validation boundaries;
 - `multimodal` references for media benchmark fixture shape, PDF/image runtime behavior, and media-grounding checks.
-- Toolkit Button render skills for actual image/audio/video/PDF/document artifact generation quality bars and validation commands.
+- applicable repository-native render skills for image/audio/video/PDF/document artifact quality bars and validation commands.
 
-For these generated-app benchmarks, write real media as case-local sibling files beside `input.json`, and make `input.json` use bare filenames. Do not put live `{uri, fileName}` objects or `data:`/`cm://` URIs into benchmark `input.json`; those are live runtime payload shapes.
+For generated-app evaluations, follow the target repository's current fixture
+loader exactly. If it uses case-local sibling files and bare filenames, preserve
+that shape; if it uses another representation, do not replace it with a
+remembered product contract. Never copy a live runtime payload shape into an
+evaluation fixture without repository evidence that both contracts are the same.
 
 ## Image Evidence
 

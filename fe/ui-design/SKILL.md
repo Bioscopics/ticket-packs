@@ -1,190 +1,90 @@
 ---
 name: fe-ui-design
-description: "Use when designing, implementing, refactoring, or auditing frontend UI that should follow the Distyl design system: token-compliant styling, shadcn wrapper usage, semantic component choice, themeable CSS variables, shared-vs-impl boundaries, and staged migration/enforcement via the Distyl ESLint rules."
+description: Design, implement, refactor, or audit frontend UI by discovering and following the target repository's existing design system, component boundaries, tokens, and enforcement rules. Use for repository-native UI work; do not invent or replace a design system unless the user asks.
 ---
 
-# FE / UI Design
+# Frontend UI Design
 
-Use this skill for frontend UI work that should conform to the Distyl design system.
+Build UI that looks and behaves native to the target repository. Preserve the user's requested design while expressing it through the repository's established components, tokens, patterns, and boundaries.
 
-This skill is for:
+## Discover Before Editing
 
-- building new Distyl-style UI,
-- refactoring existing UI onto the token system,
-- choosing the right semantic component (`Button`, `Tag`, `Badge`, `Chip`, `Link`),
-- enforcing themeable styling with CSS variables,
-- keeping shared vs impl boundaries clean,
-- setting up or using the Distyl ESLint enforcement rules.
+Inspect the smallest relevant set of repository sources before choosing an implementation:
 
-## Default Workflow
+- repository instructions and framework guidance;
+- theme, token, and global-style definitions;
+- shared component wrappers or primitives;
+- nearby screens that demonstrate current layout and interaction patterns;
+- lint rules, generators, and visual or browser test commands.
 
-1. Identify the task type:
-   - new screen or component,
-   - refactor / migration,
-   - design-system audit,
-   - token / theme / component-system setup.
-2. Read only the references needed for that task.
-3. Map the UI to semantic roles before writing code:
-   - action,
-   - navigation,
-   - status,
-   - label,
-   - filter / toggle,
-   - input,
-   - container,
-   - dialog / overlay.
-4. Implement or redesign using:
-   - shadcn wrapper components,
-   - token-backed CSS variables for color,
-   - standard Tailwind spacing / radius scale,
-   - Distyl font rules.
-5. Before finishing, check:
-   - no hardcoded colors,
-   - no direct Radix imports,
-   - no arbitrary spacing values unless truly unavoidable,
-   - no manual dark-mode color branches,
-   - no component-semantic misuse,
-   - no impl-specific logic leaking into shared space.
+Name the concrete components, tokens, and examples being reused. If the repository has no relevant system, follow its closest established convention and keep the new surface local. Do not introduce a new shared abstraction, dependency, token taxonomy, or styling framework without a demonstrated need.
 
-## Core Rules
+## Implementation Contract
 
-### 1. Never Hardcode Color
+### Use Repository-Native Components
 
-Do not use:
+- Prefer existing semantic components and wrappers over raw primitives or parallel implementations.
+- Choose elements by behavior: actions use action controls, navigation uses links, status and labels remain non-interactive, and filters or toggles expose their actual state.
+- Preserve the wrapper layer when it owns accessibility, variants, analytics, or styling contracts.
 
-- hex literals,
-- `rgb()` / `hsl()`,
-- Tailwind brand color utilities such as `text-purple-500`,
-- separate light/dark color branches in component code.
+### Use Semantic Tokens
 
-Use semantic or component token variables instead.
+- Use the repository's semantic color, typography, spacing, radius, elevation, and motion tokens where they exist.
+- Avoid raw values or arbitrary utilities when an established token represents the same role.
+- Do not assume token names or values from another repository.
+- When a needed token is missing, first check whether an existing semantic role fits. Add or extend a token only when the task truly requires a reusable role.
 
-Read [references/token_reference.md](references/token_reference.md) for the canonical token sets.
+### Keep Themes at the Token Layer
 
-### 2. Use Distyl Font Rules
+Theme variants should override primitive or semantic token values. Avoid component-level theme branches, copied themed components, or hardcoded brand choices when the existing token layer can express the difference.
 
-- UI text: `Lato, sans-serif`
-- code / monospace only: `Roboto Mono, monospace`
-- never use `Inter`, `system-ui`, or `AlliancePlatt` in product UI
+### Preserve Ownership Boundaries
 
-### 3. Use shadcn Wrappers, Not Direct Radix
+- Keep shared primitives generic and reusable.
+- Keep feature-specific behavior and domain logic in the owning feature.
+- Promote a component to shared space only when more than one real consumer needs the same stable contract.
+- Do not move logic across boundaries merely to make the current change convenient.
 
-Import primitives from the wrapper layer, not from `@radix-ui/*`.
+### Preserve User Experience
 
-If the task is in `fe-distillery` or a repo with the same component architecture, read [references/frontend_repo_rules.md](references/frontend_repo_rules.md).
+Verify the changed flow at representative viewport sizes and input methods. Preserve:
 
-### 4. Respect Component Semantics
+- keyboard access, focus visibility, and semantic structure;
+- labels, validation, empty, loading, error, and disabled states;
+- usable overflow, content wrapping, and touch targets;
+- readable contrast and reduced-motion behavior where supported.
 
-Choose components by meaning, not by visual convenience:
+## Modes
 
-- `Button` = triggers an action
-- `Link` = navigation
-- `Tag` = non-interactive label
-- `Badge` = non-interactive status / count
-- `Chip` = interactive filter / toggle
+### Build or Refactor
 
-If a UI element is clickable but not a primary action, it is often a `Chip` or `Link`, not a `Button`.
+1. Identify the user flow and relevant UI states.
+2. Reuse the nearest native layout and components.
+3. Express visual decisions through existing semantic tokens.
+4. Keep the diff within the owning feature unless a shared contract is clearly required.
+5. Exercise the real user flow early, then run the narrow repository checks that cover the touched surface.
 
-### 5. Use Token Scale for Spacing and Radius
+### Audit
 
-Prefer:
+Report findings by user impact and include a concrete repository-native replacement. Prioritize broken interaction, accessibility, responsiveness, theme behavior, and boundary violations over cosmetic preference.
 
-- standard Tailwind spacing classes (`p-4`, `gap-2`, `mt-6`)
-- token scale radius (`rounded-md`, `rounded-lg`, pills via full radius)
+### Design-System Migration or Enforcement
 
-Avoid arbitrary values like:
+Treat broad migration and new enforcement as separate scope unless explicitly requested. When requested:
 
-- `p-[13px]`
-- `gap-[7px]`
-- one-off radius values
+- inventory existing violations before choosing strictness;
+- use the repository's own lint or codemod infrastructure when present;
+- keep new and touched code compliant without requiring unrelated cleanup;
+- stage enforcement when immediate strictness would fail on untouched legacy code.
 
-### 6. Dark Mode Belongs in the Token Layer
+## Completion Evidence
 
-Do not manually encode color decisions with `dark:` utilities or parallel inline color branches when the token system should handle it.
+Report:
 
-### 7. Shared vs Impl Boundaries Matter
+- repository-native components and tokens reused;
+- any new component or token and why reuse was insufficient;
+- accessibility and responsive states exercised;
+- exact lint, type, build, or browser-flow validation run;
+- any remaining limitation or repository rule that could not be verified.
 
-When working in multi-impl repos:
-
-- shared primitives stay generic,
-- shared components must work across implementations,
-- impl-specific behavior stays in the impl layer,
-- never move a customer/product-specific component into shared space for convenience.
-
-Read [references/frontend_repo_rules.md](references/frontend_repo_rules.md) when boundary decisions matter.
-
-### 8. Customer Theming Must Flow Through Primitives
-
-A customer rebrand should be a primitive override, not a component rewrite.
-
-Do not bake Distyl purple assumptions into component logic if the component should work under future brand overrides.
-
-## Which Reference To Read
-
-Read only what is relevant:
-
-- [references/overview.md](references/overview.md)
-  - use for package structure, rollout approach, and high-level design-system orientation
-- [references/token_reference.md](references/token_reference.md)
-  - use for token names, token architecture, component token mappings, semantic layers, and naming rules
-- [references/frontend_repo_rules.md](references/frontend_repo_rules.md)
-  - use when editing `fe-distillery`-style repos, resolving shared-vs-impl boundaries, imports, dark mode, and component semantics
-- [references/generation_rules.md](references/generation_rules.md)
-  - use when generating frontend code directly and you want the most compact rule set
-- [references/eslint_rules.md](references/eslint_rules.md)
-  - use when installing, configuring, auditing, or explaining design-system enforcement
-- [references/handoff.md](references/handoff.md)
-  - use for rationale, migration strategy, repo debt, rollout sequencing, and architecture decisions
-
-## Task Patterns
-
-### New UI
-
-When building a new screen or component:
-
-1. identify the semantic roles in the interface,
-2. choose wrapper components first,
-3. map states to semantic tokens,
-4. keep colors token-backed and spacing scale-backed,
-5. check whether any part should be a shared component vs impl-local component.
-
-### Refactor / Migration
-
-When migrating existing UI:
-
-1. remove hardcoded colors first,
-2. replace direct Radix usage with wrapper imports,
-3. normalize spacing and radius,
-4. correct semantic misuse of `Button` / `Badge` / `Tag` / `Chip`,
-5. run or describe the relevant ESLint audit if enforcement is part of the task.
-
-### Audit / Enforcement
-
-When asked to audit or set up enforcement:
-
-1. read [references/eslint_rules.md](references/eslint_rules.md),
-2. identify which rules should apply immediately vs staged migration,
-3. prefer report-first rollout when the repo has large existing debt,
-4. keep new code strict even if legacy code is still migrating.
-
-## Output Expectations
-
-When producing UI code or recommendations under this skill:
-
-- be explicit about token usage,
-- be explicit about component semantics,
-- call out any place where the current UI violates the design system,
-- prefer concrete replacements over abstract advice,
-- preserve themeability and dark-mode correctness,
-- avoid average-looking defaults if the task is visual design, but stay inside the token system.
-
-## Quick Pre-Ship Checklist
-
-- Are all colors token-backed?
-- Are fonts compliant?
-- Are component choices semantically correct?
-- Are spacing and radius on scale?
-- Are imports going through wrappers?
-- Is dark mode handled through tokens?
-- Is impl-specific logic kept out of shared space?
-- Would a customer primitive override still work without changing component code?
+Do not claim conformance from compilation alone when the change affects an interactive user flow.

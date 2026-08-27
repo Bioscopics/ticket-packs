@@ -64,7 +64,7 @@ First, clone the repository:
 git clone https://github.com/Bioscopics/ticket-packs.git
 ```
 
-Then make its skill folders available through your agent’s normal skill-loading mechanism. The exact installation location depends on the agent or provider.
+Then make the repository available through your agent’s normal skill-loading mechanism. Depending on the agent, that may mean adding the repository root to a recursive skill search path or copying or symlinking the skill folders you want to use. Keep the directory structure intact so entry skills can find their supporting skills and references.
 
 Once installed, ask your agent naturally and name the appropriate entry skill.
 
@@ -134,9 +134,13 @@ The planners can draw from supporting skills for:
 - reviewing PR boundaries;
 - composing cohesive PR stacks;
 - creating synthetic data and native test files;
+- generating implementation-ready PRDs with `prd-generation`;
+- finishing a repository change and preparing it for review with `repository-ship-it`;
 - specialized workflows such as PDFs, frontend design, and citations.
 
 These are building blocks, not additional steps that must run every time.
+
+Names of external packages, distributions, and APIs remain exactly as their publishers define them, even when a name includes an organization string. That preserves interoperability; it does not make this catalog specific to that organization.
 
 ## Design principles
 

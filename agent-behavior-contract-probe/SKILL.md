@@ -35,7 +35,7 @@ Use this order:
 2. Otherwise, use another suitable real agent runtime that can execute the same contract with the required prompt, tools, permissions, and configuration.
 3. If no faithful runtime is available, classify the probe as `unavailable`, record the missing fidelity, and continue the broader workflow. Do not block solely because OpenCode is unavailable.
 
-Use OpenCode as the preferred Weave adapter when it is available and faithful. It is not a prerequisite, dependency, or substitute for the production runtime. Do not declare it as a skill dependency.
+Use OpenCode as a preferred adapter when it is available and faithful to the target agent. It is not a prerequisite, dependency, or substitute for the production runtime. Do not declare it as a skill dependency.
 
 ## Author the Contract Before Running
 
@@ -81,7 +81,7 @@ Classify each result exactly once:
 
 For `surprised`, do not patch blindly or declare the production behavior understood. Preserve the observation, identify the smallest disputed assumption, and either revise the probe with a new controlled stimulus or escalate to E2E when the surprise depends on a wider journey. For `unresolved`, tighten evidence or use E2E if only integrated observation can close it.
 
-## Weave and Toolkit Patterns
+## Behavior Contract Patterns
 
 Use these as behavior contracts, not scripted answers:
 

@@ -12,7 +12,7 @@ Prove behavior from the visible product surface. API calls, logs, database reads
 Load references only as needed:
 
 - [generic-ui-e2e.md](references/generic-ui-e2e.md): default repo-agnostic UI validation workflow.
-- [toolkit-build-a-system.md](references/toolkit-build-a-system.md): Toolkit / Build-a-System / Weave generated-app validation.
+- [generated-app-workflows.md](references/generated-app-workflows.md): generated-app and app-playground validation.
 - [native-file-inputs.md](references/native-file-inputs.md): native PDF/DOCX/XLSX/media test-data rules.
 
 If realistic native files are missing, use the sibling `create-synthetic-data` skill to create them. Keep expected labels/answer keys out of files uploaded to the app.
@@ -33,6 +33,37 @@ Choose one mode before testing:
 Under an auto-planner, use `early_smoke` during `user_flow_probe` and
 `final_proof` during `pr_hardening`. Early-smoke evidence is a feedback artifact,
 not acceptance proof, and must be labeled as such.
+
+## Environment Boundary
+
+This skill authorizes using an existing, documented, or already provisioned
+test environment. It does not authorize repairing or constructing unrelated
+infrastructure merely to make validation possible. Treat an environment setup
+failure as a real test blocker, not as unlimited pre-test work.
+
+Classify a failure before changing anything outside the product-owned surface:
+
+- `PRODUCT_BLOCKER`: caused by the product change under test; diagnose and
+  repair within the authorized task.
+- `ENVIRONMENT_BLOCKER`: caused by the host, disk, toolchain, dependency cache,
+  generated infrastructure artifact, supervisor, database, queue, shared
+  service, account, network, or unrelated runtime assembly.
+- `UNKNOWN_BLOCKER`: perform one bounded diagnostic to distinguish the two.
+
+For an `ENVIRONMENT_BLOCKER`, capture the first error and perform at most one
+small confirmation or documented retry. If it remains, stop immediately and
+report `ENVIRONMENT_BLOCKED`, the usable artifact or PR, evidence, and the user
+flow that remains unproven. Two consecutive non-product setup failures are a
+mandatory stop. Do not start new services, rebuild shared packages, change host
+toolchains, rewire caches or symlinks, generate or rewrite missing
+infrastructure artifacts, create alternate app identities or port topologies,
+or repair databases and queues unless the user explicitly authorized that
+environment work.
+
+If environment remediation is explicitly in scope, keep it bounded and
+separately owned. A request to test, get the app working, make a PR green, or
+run an E2E is not sufficient authorization by itself. Required final proof may
+remain blocked; never convert that blocked proof into a false pass.
 
 ## Workflow
 
